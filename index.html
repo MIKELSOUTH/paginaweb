@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vending Machine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .product {
+            display: inline-block;
+            width: 180px;
+            margin: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .input-container {
+            margin: 20px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Selecciona tu producto</h1>
+
+        <!-- Productos -->
+        <div class="product">
+            <img src="https://via.placeholder.com/150" alt="Producto 1">
+            <p>Producto 1</p>
+            <button class="button" onclick="selectProduct('Producto 1')">Seleccionar</button>
+        </div>
+
+        <div class="product">
+            <img src="https://via.placeholder.com/150" alt="Producto 2">
+            <p>Producto 2</p>
+            <button class="button" onclick="selectProduct('Producto 2')">Seleccionar</button>
+        </div>
+
+        <div class="product">
+            <img src="https://via.placeholder.com/150" alt="Producto 3">
+            <p>Producto 3</p>
+            <button class="button" onclick="selectProduct('Producto 3')">Seleccionar</button>
+        </div>
+
+        <!-- Formulario para ingresar correo -->
+        <div id="emailForm" class="hidden">
+            <h2>Ingresa tu correo para recibir el código QR</h2>
+            <input type="email" id="email" placeholder="tu_correo@ejemplo.com" required>
+            <br><br>
+            <button class="button" onclick="sendEmail()">Enviar</button>
+        </div>
+
+        <!-- Confirmación de solicitud -->
+        <div id="confirmationMessage" class="hidden">
+            <h2>¡Gracias! Te hemos enviado el código QR a tu correo.</h2>
+        </div>
+    </div>
+
+    <script>
+        let selectedProduct = "";
+
+        // Función para seleccionar un producto
+        function selectProduct(product) {
+            selectedProduct = product;
+            // Mostrar el formulario para ingresar el correo
+            document.getElementById("emailForm").classList.remove("hidden");
+        }
+
+        // Función para enviar el correo y generar el QR
+        function sendEmail() {
+            const email = document.getElementById("email").value;
+
+            if (!email) {
+                alert("Por favor ingresa un correo válido.");
+                return;
+            }
+
+            // Crear los datos para el POST
+            const data = {
+                "pedido_id": selectedProduct,
+                "expiracion": 3600,  // Expiración del QR en segundos (1 hora)
+                "email": email
+            };
+
+            // Enviar el POST al servidor
+            fetch('https://flask-correo.onrender.com/generar_qr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.qr_url) {
+                    document.getElementById("emailForm").classList.add("hidden");
+                    document.getElementById("confirmationMessage").classList.remove("hidden");
+                    console.log("QR enviado a: " + email);
+                } else {
+                    alert("Error al generar el QR. Intenta de nuevo.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Hubo un error al procesar la solicitud.");
+            });
+        }
+    </script>
+</body>
+</html>
