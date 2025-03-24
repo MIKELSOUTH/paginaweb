@@ -3,118 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máquina Vending</title>
+    <title>Máquina Expendedora</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
             text-align: center;
             padding: 20px;
-        }
-        .products {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .product {
-            border: 1px solid #ddd;
-            padding: 10px;
+            background-color: #fff;
             border-radius: 8px;
-            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .product img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
+        h1 {
+            color: #333;
         }
-        .button {
+        .productos {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .producto {
+            margin: 15px;
+        }
+        .producto button {
             background-color: #4CAF50;
             color: white;
-            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            padding: 15px 20px;
+            font-size: 16px;
             cursor: pointer;
+            border-radius: 5px;
         }
-        .button:hover {
+        .producto button:hover {
             background-color: #45a049;
-        }
-        #emailForm {
-            display: none;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-
-    <h1>Bienvenido a la Máquina Vending</h1>
-    <h3>Selecciona un producto</h3>
-
-    <div class="products">
-        <div class="product" onclick="selectProduct('Coca Cola')">
-            <img src="https://via.placeholder.com/150?text=Coca+Cola" alt="Coca Cola">
-            <p>Coca Cola</p>
+    <div class="container">
+        <h1>Bienvenido a la Máquina Expendedora</h1>
+        <div class="productos">
+            <div class="producto">
+                <button onclick="seleccionarProducto('Coca Cola')">Coca Cola</button>
+            </div>
+            <div class="producto">
+                <button onclick="seleccionarProducto('Papas Fritas')">Papas Fritas</button>
+            </div>
+            <div class="producto">
+                <button onclick="seleccionarProducto('Leche')">Leche</button>
+            </div>
+            <div class="producto">
+                <button onclick="seleccionarProducto('Jugo')">Jugo</button>
+            </div>
         </div>
-        <div class="product" onclick="selectProduct('Agua')">
-            <img src="https://via.placeholder.com/150?text=Agua" alt="Agua">
-            <p>Agua</p>
-        </div>
-        <div class="product" onclick="selectProduct('Jugos')">
-            <img src="https://via.placeholder.com/150?text=Jugos" alt="Jugos">
-            <p>Jugos</p>
-        </div>
-        <div class="product" onclick="selectProduct('Snacks')">
-            <img src="https://via.placeholder.com/150?text=Snacks" alt="Snacks">
-            <p>Snacks</p>
-        </div>
-        <!-- Añade más productos aquí -->
-    </div>
-
-    <!-- Formulario para ingresar correo -->
-    <div id="emailForm">
-        <h3>Ingresa tu correo electrónico</h3>
-        <input type="email" id="email" placeholder="Correo electrónico" required>
-        <br><br>
-        <button class="button" onclick="sendPostRequest()">Enviar QR</button>
     </div>
 
     <script>
-        let selectedProduct = '';
-        
-        // Función para seleccionar el producto
-        function selectProduct(product) {
-            selectedProduct = product;
-            document.getElementById('emailForm').style.display = 'block';
-        }
+        function seleccionarProducto(producto) {
+            const correo = prompt("Por favor ingresa tu correo electrónico para recibir el código QR:");
 
-        // Función para enviar el correo
-        function sendPostRequest() {
-            const email = document.getElementById('email').value;
-            if (selectedProduct && email) {
-                fetch('https://flask-correo.onrender.com/send_email', {
+            if (correo) {
+                const datos = {
+                    email: correo,
+                    producto: producto
+                };
+
+                fetch('https://flask-correo.onrender.com/generar_qr', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        email: email,
-                        product: selectedProduct
-                    })
+                    body: JSON.stringify(datos)
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert('Correo enviado con éxito!');
-                    console.log(data);  // Muestra la respuesta en consola
+                    alert("¡Pedido realizado con éxito! Revisa tu correo para obtener el código QR.");
+                    console.log(data);
                 })
                 .catch(error => {
-                    alert('Hubo un error al procesar la solicitud.');
-                    console.error('Error:', error);
+                    alert("Hubo un error al procesar la solicitud. Intenta nuevamente.");
+                    console.error("Error:", error);
                 });
-            } else {
-                alert('Por favor, selecciona un producto y ingresa tu correo.');
             }
         }
     </script>
-
 </body>
 </html>
