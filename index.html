@@ -1,98 +1,80 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máquina Expendedora</title>
+    <title>Vending Machine</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             margin: 0;
         }
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        .productos {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-        .producto {
-            margin: 15px;
-        }
-        .producto button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            font-size: 16px;
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px;
             cursor: pointer;
-            border-radius: 5px;
-        }
-        .producto button:hover {
-            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Bienvenido a la Máquina Expendedora</h1>
-        <div class="productos">
-            <div class="producto">
-                <button onclick="seleccionarProducto('Coca Cola')">Coca Cola</button>
-            </div>
-            <div class="producto">
-                <button onclick="seleccionarProducto('Papas Fritas')">Papas Fritas</button>
-            </div>
-            <div class="producto">
-                <button onclick="seleccionarProducto('Leche')">Leche</button>
-            </div>
-            <div class="producto">
-                <button onclick="seleccionarProducto('Jugo')">Jugo</button>
-            </div>
-        </div>
+    <h1>Selecciona un producto</h1>
+    <div id="products">
+        <div class="product" data-id="1">Producto A</div>
+        <div class="product" data-id="2">Producto B</div>
+        <div class="product" data-id="3">Producto C</div>
+        <div class="product" data-id="4">Producto D</div>
     </div>
-
+    <div id="email-form" style="display: none;">
+        <h2>Ingresa tu correo electrónico</h2>
+        <input type="email" id="email" placeholder="correo@ejemplo.com">
+        <button id="send-email">Enviar</button>
+    </div>
     <script>
-        function seleccionarProducto(producto) {
-            const correo = prompt("Por favor ingresa tu correo electrónico para recibir el código QR:");
+        const products = document.querySelectorAll('.product');
+        const emailForm = document.getElementById('email-form');
+        const emailInput = document.getElementById('email');
+        const sendEmailButton = document.getElementById('send-email');
+        let selectedProductId = null;
 
-            if (correo) {
-                const datos = {
-                    email: correo,
-                    producto: producto
-                };
+        products.forEach(product => {
+            product.addEventListener('click', () => {
+                selectedProductId = product.dataset.id;
+                document.getElementById('products').style.display = 'none';
+                emailForm.style.display = 'block';
+            });
+        });
 
-                fetch('https://flask-correo.onrender.com/generar_qr', {
+        sendEmailButton.addEventListener('click', () => {
+            const email = emailInput.value;
+            if (email && selectedProductId) {
+                fetch('/generar_qr', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(datos)
+                    body: JSON.stringify({
+                        pedido_id: selectedProductId,
+                        expiracion: 3600, // 1 hora de expiración
+                        email: email
+                    })
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert("¡Pedido realizado con éxito! Revisa tu correo para obtener el código QR.");
+                    alert('Código QR enviado a tu correo.');
                     console.log(data);
                 })
                 .catch(error => {
-                    alert("Hubo un error al procesar la solicitud. Intenta nuevamente.");
-                    console.error("Error:", error);
+                    alert('Error al enviar la solicitud.');
+                    console.error('Error:', error);
                 });
+            } else {
+                alert('Ingresa un correo electrónico y selecciona un producto.');
             }
-        }
+        });
     </script>
 </body>
 </html>
