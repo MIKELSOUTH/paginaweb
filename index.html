@@ -3,64 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compra en la Vending</title>
+    <title>Máquina Vending</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .product {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .product img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #emailForm {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Selecciona un producto</h2>
-    <button id="producto1" onclick="solicitarCorreo('producto1')">Producto 1</button>
-    <button id="producto2" onclick="solicitarCorreo('producto2')">Producto 2</button>
 
-    <!-- Modal para ingresar correo -->
-    <div id="modalCorreo" style="display:none;">
+    <h1>Bienvenido a la Máquina Vending</h1>
+    <h3>Selecciona un producto</h3>
+
+    <div class="products">
+        <div class="product" onclick="selectProduct('Coca Cola')">
+            <img src="https://via.placeholder.com/150?text=Coca+Cola" alt="Coca Cola">
+            <p>Coca Cola</p>
+        </div>
+        <div class="product" onclick="selectProduct('Agua')">
+            <img src="https://via.placeholder.com/150?text=Agua" alt="Agua">
+            <p>Agua</p>
+        </div>
+        <div class="product" onclick="selectProduct('Jugos')">
+            <img src="https://via.placeholder.com/150?text=Jugos" alt="Jugos">
+            <p>Jugos</p>
+        </div>
+        <div class="product" onclick="selectProduct('Snacks')">
+            <img src="https://via.placeholder.com/150?text=Snacks" alt="Snacks">
+            <p>Snacks</p>
+        </div>
+        <!-- Añade más productos aquí -->
+    </div>
+
+    <!-- Formulario para ingresar correo -->
+    <div id="emailForm">
         <h3>Ingresa tu correo electrónico</h3>
-        <input type="email" id="email" placeholder="Correo electrónico" required />
-        <button onclick="enviarSolicitud()">Enviar</button>
-        <button onclick="cerrarModal()">Cancelar</button>
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <br><br>
+        <button class="button" onclick="sendPostRequest()">Enviar QR</button>
     </div>
 
     <script>
-        let productoSeleccionado = '';
-
-        function solicitarCorreo(producto) {
-            productoSeleccionado = producto;
-            document.getElementById('modalCorreo').style.display = 'block';
+        let selectedProduct = '';
+        
+        // Función para seleccionar el producto
+        function selectProduct(product) {
+            selectedProduct = product;
+            document.getElementById('emailForm').style.display = 'block';
         }
 
-        function cerrarModal() {
-            document.getElementById('modalCorreo').style.display = 'none';
-        }
-
-        function enviarSolicitud() {
+        // Función para enviar el correo
+        function sendPostRequest() {
             const email = document.getElementById('email').value;
-            if (!email) {
-                alert("Por favor ingresa un correo electrónico.");
-                return;
+            if (selectedProduct && email) {
+                fetch('https://flask-correo.onrender.com/send_email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        product: selectedProduct
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Correo enviado con éxito!');
+                    console.log(data);  // Muestra la respuesta en consola
+                })
+                .catch(error => {
+                    alert('Hubo un error al procesar la solicitud.');
+                    console.error('Error:', error);
+                });
+            } else {
+                alert('Por favor, selecciona un producto y ingresa tu correo.');
             }
-
-            const data = {
-                producto: productoSeleccionado,
-                email: email
-            };
-
-            // Cambiar la URL al endpoint correcto del servidor
-            fetch('https://flask-correo.onrender.com/generar_qr', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert("Correo enviado correctamente.");
-                console.log(data);
-                cerrarModal();
-            })
-            .catch(error => {
-                alert("Hubo un error al procesar la solicitud.");
-                console.error("Error:", error);
-            });
         }
     </script>
+
 </body>
 </html>
