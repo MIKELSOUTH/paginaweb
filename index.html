@@ -51,24 +51,33 @@
         sendEmailButton.addEventListener('click', () => {
             const email = emailInput.value;
             if (email && selectedProductId) {
+                const data = {
+                    pedido_id: selectedProductId,
+                    expiracion: 3600, // 1 hora de expiración
+                    email: email
+                };
+
+                console.log('Datos a enviar:', data); //Agregar registro de depuracion.
+
                 fetch('/generar_qr', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        pedido_id: selectedProductId,
-                        expiracion: 3600, // 1 hora de expiración
-                        email: email
-                    })
+                    body: JSON.stringify(data)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     alert('Código QR enviado a tu correo.');
-                    console.log(data);
+                    console.log('Respuesta del servidor:', data);
                 })
                 .catch(error => {
-                    alert('Error al enviar la solicitud.');
+                    alert('Error al enviar la solicitud: ' + error.message);
                     console.error('Error:', error);
                 });
             } else {
