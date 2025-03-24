@@ -3,141 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vending Machine</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            margin: 20px;
-        }
-
-        .product {
-            display: inline-block;
-            width: 180px;
-            margin: 15px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-        }
-
-        .product img {
-            width: 100%;
-            border-radius: 8px;
-        }
-
-        .button {
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: #45a049;
-        }
-
-        .input-container {
-            margin: 20px 0;
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+    <title>Compra en la Vending</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Selecciona tu producto</h1>
+    <h2>Selecciona un producto</h2>
+    <button id="producto1" onclick="solicitarCorreo('producto1')">Producto 1</button>
+    <button id="producto2" onclick="solicitarCorreo('producto2')">Producto 2</button>
 
-        <!-- Productos -->
-        <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Producto 1">
-            <p>Producto 1</p>
-            <button class="button" onclick="selectProduct('Producto 1')">Seleccionar</button>
-        </div>
-
-        <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Producto 2">
-            <p>Producto 2</p>
-            <button class="button" onclick="selectProduct('Producto 2')">Seleccionar</button>
-        </div>
-
-        <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Producto 3">
-            <p>Producto 3</p>
-            <button class="button" onclick="selectProduct('Producto 3')">Seleccionar</button>
-        </div>
-
-        <!-- Formulario para ingresar correo -->
-        <div id="emailForm" class="hidden">
-            <h2>Ingresa tu correo para recibir el código QR</h2>
-            <input type="email" id="email" placeholder="tu_correo@ejemplo.com" required>
-            <br><br>
-            <button class="button" onclick="sendEmail()">Enviar</button>
-        </div>
-
-        <!-- Confirmación de solicitud -->
-        <div id="confirmationMessage" class="hidden">
-            <h2>¡Gracias! Te hemos enviado el código QR a tu correo.</h2>
-        </div>
+    <!-- Modal para ingresar correo -->
+    <div id="modalCorreo" style="display:none;">
+        <h3>Ingresa tu correo electrónico</h3>
+        <input type="email" id="email" placeholder="Correo electrónico" required />
+        <button onclick="enviarSolicitud()">Enviar</button>
+        <button onclick="cerrarModal()">Cancelar</button>
     </div>
 
     <script>
-        let selectedProduct = "";
+        let productoSeleccionado = '';
 
-        // Función para seleccionar un producto
-        function selectProduct(product) {
-            selectedProduct = product;
-            // Mostrar el formulario para ingresar el correo
-            document.getElementById("emailForm").classList.remove("hidden");
+        function solicitarCorreo(producto) {
+            productoSeleccionado = producto;
+            document.getElementById('modalCorreo').style.display = 'block';
         }
 
-        // Función para enviar el correo y generar el QR
-        function sendEmail() {
-            const email = document.getElementById("email").value;
+        function cerrarModal() {
+            document.getElementById('modalCorreo').style.display = 'none';
+        }
 
+        function enviarSolicitud() {
+            const email = document.getElementById('email').value;
             if (!email) {
-                alert("Por favor ingresa un correo válido.");
+                alert("Por favor ingresa un correo electrónico.");
                 return;
             }
 
-            // Crear los datos para el POST
             const data = {
-                "pedido_id": selectedProduct,
-                "expiracion": 3600,  // Expiración del QR en segundos (1 hora)
-                "email": email
+                producto: productoSeleccionado,
+                email: email
             };
 
-            // Enviar el POST al servidor
+            // Cambiar la URL al endpoint correcto del servidor
             fetch('https://flask-correo.onrender.com/generar_qr', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(data => {
-                if (data.qr_url) {
-                    document.getElementById("emailForm").classList.add("hidden");
-                    document.getElementById("confirmationMessage").classList.remove("hidden");
-                    console.log("QR enviado a: " + email);
-                } else {
-                    alert("Error al generar el QR. Intenta de nuevo.");
-                }
+                alert("Correo enviado correctamente.");
+                console.log(data);
+                cerrarModal();
             })
             .catch(error => {
-                console.error("Error:", error);
                 alert("Hubo un error al procesar la solicitud.");
+                console.error("Error:", error);
             });
         }
     </script>
