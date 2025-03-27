@@ -3,36 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seleccionar Producto</title>
+    <title>Generador de QR</title>
     <style>
         body {
             background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 80px);
-            gap: 15px;
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .icon {
-            width: 80px;
-            height: 80px;
-            background-color: #ddd;
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
+            margin: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
+            text-align: center;
         }
         .icon:hover {
-            background-color: #bbb;
+            background-color: #45a049;
         }
         .popup {
             display: none;
@@ -40,100 +41,107 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background-color: white;
             padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .popup input {
             margin: 10px 0;
-            padding: 5px;
-            width: 200px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+            padding: 8px;
+            width: 100%;
         }
         .popup button {
-            padding: 5px 10px;
-            margin-top: 10px;
-            cursor: pointer;
-            border: none;
-            background-color: #28a745;
+            padding: 10px 20px;
+            background-color: #4CAF50;
             color: white;
-            border-radius: 3px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
         .popup button:hover {
-            background-color: #218838;
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 
-    <div class="grid">
-        <div class="icon" onclick="seleccionarProducto(1)">1</div>
-        <div class="icon" onclick="seleccionarProducto(2)">2</div>
-        <div class="icon" onclick="seleccionarProducto(3)">3</div>
-        <div class="icon" onclick="seleccionarProducto(4)">4</div>
-        <div class="icon" onclick="seleccionarProducto(5)">5</div>
-        <div class="icon" onclick="seleccionarProducto(6)">6</div>
-        <div class="icon" onclick="seleccionarProducto(7)">7</div>
-        <div class="icon" onclick="seleccionarProducto(8)">8</div>
-        <div class="icon" onclick="seleccionarProducto(9)">9</div>
-        <div class="icon" onclick="seleccionarProducto(10)">10</div>
-        <div class="icon" onclick="seleccionarProducto(11)">11</div>
-        <div class="icon" onclick="seleccionarProducto(12)">12</div>
-        <div class="icon" onclick="seleccionarProducto(13)">13</div>
-        <div class="icon" onclick="seleccionarProducto(14)">14</div>
-        <div class="icon" onclick="seleccionarProducto(15)">15</div>
-    </div>
+<div class="container">
+    <!-- Los 15 iconos -->
+    <div class="icon" data-product="1">Producto 1</div>
+    <div class="icon" data-product="2">Producto 2</div>
+    <div class="icon" data-product="3">Producto 3</div>
+    <div class="icon" data-product="4">Producto 4</div>
+    <div class="icon" data-product="5">Producto 5</div>
+    <div class="icon" data-product="6">Producto 6</div>
+    <div class="icon" data-product="7">Producto 7</div>
+    <div class="icon" data-product="8">Producto 8</div>
+    <div class="icon" data-product="9">Producto 9</div>
+    <div class="icon" data-product="10">Producto 10</div>
+    <div class="icon" data-product="11">Producto 11</div>
+    <div class="icon" data-product="12">Producto 12</div>
+    <div class="icon" data-product="13">Producto 13</div>
+    <div class="icon" data-product="14">Producto 14</div>
+    <div class="icon" data-product="15">Producto 15</div>
+</div>
 
-    <div class="popup" id="popup">
-        <p>Ingrese su correo:</p>
-        <input type="email" id="email" placeholder="Correo electrónico">
-        <button onclick="enviarDatos()">Enviar</button>
-    </div>
+<!-- Pop-up para ingresar el correo -->
+<div class="popup" id="popup">
+    <h2>Ingresa tu correo</h2>
+    <input type="email" id="email" placeholder="Tu correo electrónico">
+    <button onclick="sendEmail()">Enviar</button>
+</div>
 
-    <script>
-        let productoSeleccionado = null;
+<script>
+    let selectedProduct = null;
 
-        function seleccionarProducto(producto) {
-            productoSeleccionado = producto;
+    // Mostrar el pop-up cuando se selecciona un icono
+    document.querySelectorAll('.icon').forEach(icon => {
+        icon.addEventListener('click', function() {
+            selectedProduct = this.getAttribute('data-product');
             document.getElementById('popup').style.display = 'block';
+        });
+    });
+
+    // Función para enviar el correo y el producto al servidor
+    function sendEmail() {
+        const email = document.getElementById('email').value;
+        
+        if (!email) {
+            alert('Por favor, ingresa un correo válido.');
+            return;
         }
 
-        function enviarDatos() {
-            const email = document.getElementById('email').value;
-            if (!email) {
-                alert('Ingrese un correo válido.');
-                return;
+        // Datos a enviar al servidor Flask
+        const data = {
+            pedido_id: selectedProduct,  // Identificador del producto
+            expiracion: 600,  // Tiempo de expiración del QR en segundos (10 minutos)
+            email: email  // Correo electrónico del cliente
+        };
+
+        fetch('https://flask-correo.onrender.com/generar_qr', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)  // Convertir los datos a formato JSON
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.qr_url) {
+                alert('Código QR enviado al correo: ' + email);
+            } else {
+                alert('Hubo un error al generar el código QR');
             }
-
-            const datos = {
-                pedido_id: productoSeleccionado, 
-                email: email,
-                expiracion: 600  // 10 minutos en segundos
-            };
-
-            console.log("Enviando JSON:", JSON.stringify(datos)); // Para depuración
-
-            fetch('https://flask-correo.onrender.com/generar_qr', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datos)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Código enviado correctamente.');
-                document.getElementById('popup').style.display = 'none';
-            })
-            .catch(error => {
-                alert('Error al enviar los datos.');
-                console.error(error);
-            });
-        }
-    </script>
+        })
+        .catch(error => {
+            alert('Error: ' + error);
+        })
+        .finally(() => {
+            document.getElementById('popup').style.display = 'none';
+        });
+    }
+</script>
 
 </body>
 </html>
