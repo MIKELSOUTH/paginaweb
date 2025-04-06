@@ -14,10 +14,9 @@
         }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 columnas */
-            grid-template-rows: repeat(5, 1fr);    /* 5 filas */
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            max-width: 400px;
+            max-width: 300px;
             margin: auto;
         }
         .icon {
@@ -26,37 +25,52 @@
             border-radius: 10px;
             cursor: pointer;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #qr-image {
+            margin-top: 20px;
+            max-width: 200px;
         }
     </style>
 </head>
 <body>
     <h2>Selecciona un producto</h2>
     <div class="grid-container">
-        <div class="icon" onclick="seleccionarProducto(1)">📦</div>
-        <div class="icon" onclick="seleccionarProducto(2)">🍫</div>
-        <div class="icon" onclick="seleccionarProducto(3)">🥤</div>
-        <div class="icon" onclick="seleccionarProducto(4)">🍪</div>
-        <div class="icon" onclick="seleccionarProducto(5)">🧴</div>
-        <div class="icon" onclick="seleccionarProducto(6)">📱</div>
-        <div class="icon" onclick="seleccionarProducto(7)">🎧</div>
-        <div class="icon" onclick="seleccionarProducto(8)">⌚</div>
-        <div class="icon" onclick="seleccionarProducto(9)">💡</div>
-        <div class="icon" onclick="seleccionarProducto(10)">🎮</div>
-        <div class="icon" onclick="seleccionarProducto(11)">🖥️</div>
-        <div class="icon" onclick="seleccionarProducto(12)">📷</div>
-        <div class="icon" onclick="seleccionarProducto(13)">🎤</div>
-        <div class="icon" onclick="seleccionarProducto(14)">📚</div>
-        <div class="icon" onclick="seleccionarProducto(15)">🔋</div>
+        <!-- Productos en una matriz de 5x3 -->
+        <div class="icon" onclick="seleccionarProducto(1)">📦 Producto 1</div>
+        <div class="icon" onclick="seleccionarProducto(2)">🍫 Producto 2</div>
+        <div class="icon" onclick="seleccionarProducto(3)">🥤 Producto 3</div>
+        <div class="icon" onclick="seleccionarProducto(4)">🍪 Producto 4</div>
+        <div class="icon" onclick="seleccionarProducto(5)">🧴 Producto 5</div>
+        <div class="icon" onclick="seleccionarProducto(6)">📱 Producto 6</div>
+        <div class="icon" onclick="seleccionarProducto(7)">🎧 Producto 7</div>
+        <div class="icon" onclick="seleccionarProducto(8)">⌚ Producto 8</div>
+        <div class="icon" onclick="seleccionarProducto(9)">💡 Producto 9</div>
+        <div class="icon" onclick="seleccionarProducto(10)">🎮 Producto 10</div>
+        <div class="icon" onclick="seleccionarProducto(11)">🖥️ Producto 11</div>
+        <div class="icon" onclick="seleccionarProducto(12)">📷 Producto 12</div>
+        <div class="icon" onclick="seleccionarProducto(13)">🎤 Producto 13</div>
+        <div class="icon" onclick="seleccionarProducto(14)">📚 Producto 14</div>
+        <div class="icon" onclick="seleccionarProducto(15)">🔋 Producto 15</div>
     </div>
 
     <div id="formulario" style="display:none; margin-top: 20px;">
         <h3>Ingresa tu número de WhatsApp</h3>
         <input type="tel" id="telefono" placeholder="Ej: 961767987">
-        <button onclick="enviarDatos()">Enviar</button>
+        <button class="button" onclick="enviarDatos()">Enviar</button>
+    </div>
+
+    <div id="qr-container" style="display:none; margin-top: 20px;">
+        <h3>Tu código QR</h3>
+        <img id="qr-image" alt="QR" />
     </div>
 
     <script>
@@ -74,13 +88,13 @@
                 return;
             }
 
-            // Agregar el código de país (+56) por defecto
-            const telefonoCompleto = '+56' + telefono;
+            // Prepend the Chilean country code (+56) to the phone number
+            const numeroConPais = '+56' + telefono;
 
             const data = {
                 pedido_id: productoSeleccionado,
-                telefono: telefonoCompleto,
-                expiracion: 600
+                telefono: numeroConPais,
+                expiracion: 600  // 10 minutos de expiración
             };
 
             fetch('https://flask-wsp.onrender.com/generar_qr', {
@@ -90,15 +104,22 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
-            .then(data => {
-                alert("El código QR será enviado a tu WhatsApp.");
+            .then(response => response.blob())
+            .then(imageBlob => {
+                const imageUrl = URL.createObjectURL(imageBlob);
+                document.getElementById('qr-image').src = imageUrl;
+                document.getElementById('qr-container').style.display = 'block';
+                // Optional: Open WhatsApp link for sending QR to self
+                const whatsappUrl = `https://wa.me/${numeroConPais}?text=Tu código QR está listo!`;
+                window.location.href = whatsappUrl;
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("Hubo un problema al enviar el mensaje.");
+                alert("Hubo un problema al generar el código QR.");
             });
         }
     </script>
 </body>
 </html>
+
+
