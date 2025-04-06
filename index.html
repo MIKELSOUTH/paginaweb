@@ -55,7 +55,7 @@
 
     <div id="formulario" style="display:none; margin-top: 20px;">
         <h3>Ingresa tu número de WhatsApp</h3>
-        <input type="tel" id="telefono" placeholder="Ej: +1234567890">
+        <input type="tel" id="telefono" placeholder="Ej: 961767987">
         <button onclick="enviarDatos()">Enviar</button>
     </div>
 
@@ -74,9 +74,12 @@
                 return;
             }
 
+            // Agregar el código de país (+56) por defecto
+            const telefonoCompleto = '+56' + telefono;
+
             const data = {
                 pedido_id: productoSeleccionado,
-                telefono: telefono,
+                telefono: telefonoCompleto,
                 expiracion: 600
             };
 
@@ -99,4 +102,3 @@
     </script>
 </body>
 </html>
-
