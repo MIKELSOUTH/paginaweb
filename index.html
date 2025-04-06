@@ -24,16 +24,16 @@
     .product {
       position: relative;
       background-color: #fff;
-      padding: 10px;
+      padding: 20px;
       border-radius: 10px;
       cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .product img {
-      width: 100%;
-      height: 120px;
-      object-fit: contain;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
     }
 
     .product-number {
@@ -46,7 +46,6 @@
 
     #formulario, #qr-container {
       margin-top: 30px;
-      display: none;
     }
 
     input[type="tel"] {
@@ -62,9 +61,31 @@
       cursor: pointer;
     }
 
-    #qr-container img {
+    #qr-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #qr-img {
+      width: 50%;
+      max-width: 300px;
+    }
+
+    #mensaje-qr {
       margin-top: 20px;
-      width: 200px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
@@ -72,9 +93,7 @@
 
   <h2>Selecciona un producto</h2>
 
-  <div class="grid-container" id="productos">
-    <!-- Se rellenará con JS -->
-  </div>
+  <div class="grid-container" id="productos"></div>
 
   <div id="formulario">
     <h3>Ingresa tu número de WhatsApp</h3>
@@ -84,40 +103,28 @@
   </div>
 
   <div id="qr-container">
-    <h3>Tu código QR</h3>
     <img id="qr-img" src="" alt="Código QR" />
+    <div id="mensaje-qr">Escanea tu QR en la máquina para retirar tu producto</div>
   </div>
 
   <script>
     const productos = [
-      { id: 1, nombre: "Coca-Cola", img: "https://i.imgur.com/Cocacola.png" },
-      { id: 2, nombre: "Papas Fritas", img: "https://i.imgur.com/n4vH7Zr.png" },
-      { id: 3, nombre: "Galletas", img: "https://i.imgur.com/NtIXe3E.png" },
-      { id: 4, nombre: "Agua", img: "https://i.imgur.com/7O0vlpM.png" },
-      { id: 5, nombre: "Jugo", img: "https://i.imgur.com/bHkIpO3.png" },
-      { id: 6, nombre: "Chocolate", img: "https://i.imgur.com/W5xM1BE.png" },
-      { id: 7, nombre: "Energética", img: "https://i.imgur.com/3DYWdYv.png" },
-      { id: 8, nombre: "Chicle", img: "https://i.imgur.com/Y5D6bX1.png" },
-      { id: 9, nombre: "Gomitas", img: "https://i.imgur.com/I0PZhxZ.png" },
-      { id: 10, nombre: "Café", img: "https://i.imgur.com/vTx7eoW.png" },
-      { id: 11, nombre: "Té", img: "https://i.imgur.com/WfxzBPG.png" },
-      { id: 12, nombre: "Cereal", img: "https://i.imgur.com/hI1v1b1.png" },
-      { id: 13, nombre: "Leche", img: "https://i.imgur.com/DqKiAGc.png" },
-      { id: 14, nombre: "Yogurt", img: "https://i.imgur.com/f5bbDNU.png" },
-      { id: 15, nombre: "Barra", img: "https://i.imgur.com/Zv5rBGY.png" }
+      "Coca-Cola", "Papas Fritas", "Galletas", "Agua", "Jugo",
+      "Chocolate", "Energética", "Chicle", "Gomitas", "Café",
+      "Té", "Cereal", "Leche", "Yogurt", "Barra"
     ];
 
     let productoSeleccionado = null;
 
-    // Mostrar productos
     const container = document.getElementById("productos");
-    productos.forEach(prod => {
+    productos.forEach((nombre, i) => {
+      const id = i + 1;
       const div = document.createElement("div");
       div.className = "product";
-      div.onclick = () => seleccionarProducto(prod.id);
+      div.onclick = () => seleccionarProducto(id);
       div.innerHTML = `
-        <img src="${prod.img}" alt="${prod.nombre}" />
-        <div class="product-number">#${prod.id}</div>
+        ${nombre}
+        <div class="product-number">${id}</div>
       `;
       container.appendChild(div);
     });
@@ -150,7 +157,7 @@
       .then(res => {
         if (res.qr_base64) {
           document.getElementById("qr-img").src = "data:image/png;base64," + res.qr_base64;
-          document.getElementById("qr-container").style.display = 'block';
+          document.getElementById("qr-container").style.display = 'flex';
         } else {
           alert("No se pudo generar el QR.");
         }
