@@ -3,145 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de QR</title>
+    <title>Selección de Producto</title>
     <style>
         body {
-            background-color: #f0f0f0;
+            background-color: #f4f4f4;
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            text-align: center;
             margin: 0;
+            padding: 20px;
         }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+            grid-template-rows: repeat(5, 1fr);    /* 5 filas */
+            gap: 10px;
+            max-width: 400px;
+            margin: auto;
         }
         .icon {
-            width: 100px;
-            height: 100px;
-            background-color: #4CAF50;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-        }
-        .icon:hover {
-            background-color: #45a049;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
+            background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .popup input {
-            margin: 10px 0;
-            padding: 8px;
-            width: 100%;
-        }
-        .popup button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
-        }
-        .popup button:hover {
-            background-color: #45a049;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <!-- Los 15 iconos -->
-    <div class="icon" data-product="1">Producto 1</div>
-    <div class="icon" data-product="2">Producto 2</div>
-    <div class="icon" data-product="3">Producto 3</div>
-    <div class="icon" data-product="4">Producto 4</div>
-    <div class="icon" data-product="5">Producto 5</div>
-    <div class="icon" data-product="6">Producto 6</div>
-    <div class="icon" data-product="7">Producto 7</div>
-    <div class="icon" data-product="8">Producto 8</div>
-    <div class="icon" data-product="9">Producto 9</div>
-    <div class="icon" data-product="10">Producto 10</div>
-    <div class="icon" data-product="11">Producto 11</div>
-    <div class="icon" data-product="12">Producto 12</div>
-    <div class="icon" data-product="13">Producto 13</div>
-    <div class="icon" data-product="14">Producto 14</div>
-    <div class="icon" data-product="15">Producto 15</div>
-</div>
-
-<!-- Pop-up para ingresar el correo -->
-<div class="popup" id="popup">
-    <h2>Ingresa tu correo</h2>
-    <input type="email" id="email" placeholder="Tu correo electrónico">
-    <button onclick="sendEmail()">Enviar</button>
-</div>
-
-<script>
-    let selectedProduct = null;
-
-    // Mostrar el pop-up cuando se selecciona un icono
-    document.querySelectorAll('.icon').forEach(icon => {
-        icon.addEventListener('click', function() {
-            selectedProduct = this.getAttribute('data-product');
-            document.getElementById('popup').style.display = 'block';
-        });
-    });
-
-    // Función para enviar el correo y el producto al servidor
-    function sendEmail() {
-        const email = document.getElementById('email').value;
-        
-        if (!email) {
-            alert('Por favor, ingresa un correo válido.');
-            return;
-        }
-
-        // Datos a enviar al servidor Flask
-        const data = {
-            pedido_id: selectedProduct,  // Identificador del producto
-            expiracion: 600,  // Tiempo de expiración del QR en segundos (10 minutos)
-            email: email  // Correo electrónico del cliente
-        };
-
-        fetch('https://flask-correo.onrender.com/generar_qr', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)  // Convertir los datos a formato JSON
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.qr_url) {
-                alert('Código QR enviado al correo: ' + email);
-            } else {
-                alert('Hubo un error al generar el código QR');
-            }
-        })
-        .catch(error => {
-            alert('Error: ' + error);
-        })
-        .finally(() => {
-            document.getElementById('popup').style.display = 'none';
-        });
-    }
-</script>
-
-</body>
-</html>
+    <h2>Selecciona un producto</h2>
+    <div class="grid-container">
+        <div class="icon" onclick="seleccionarProducto(1)">📦</div>
+        <div class="icon" onclick="seleccionarProducto(2)">🍫</div>
+        <div class="icon" onclick="seleccionarProducto(3)">🥤</div>
+        <div class="icon" onclick="seleccionarProducto(4)">🍪</div>
+        <div class="icon" onclick="seleccionarProducto(5)">🧴</div>
+        <div class="icon" onclick="seleccionarProducto(6)">📱</div>
+        <div class="icon" onclick="seleccionarProducto(7)">🎧</div>
+        <div class="icon" onclick="seleccionarProducto(8)">⌚</div>
+        <div class="icon" onclick="seleccionarProducto(9)">💡</div>
+        <div class="icon" onclick="seleccionarProducto(10)">🎮
