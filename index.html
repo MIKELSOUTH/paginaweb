@@ -1,172 +1,104 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vending</title>
-  <style>
-    body {
-      background-color: #f4f4f4;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    .product {
-      position: relative;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: bold;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100px;
-    }
-
-    .product-number {
-      position: absolute;
-      bottom: 5px;
-      left: 10px;
-      font-size: 12px;
-      color: #333;
-    }
-
-    #formulario, #qr-container {
-      margin-top: 30px;
-    }
-
-    input[type="tel"] {
-      padding: 10px;
-      font-size: 16px;
-      width: 200px;
-      margin-bottom: 10px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    #qr-container {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: white;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #qr-img {
-      width: 50%;
-      max-width: 300px;
-    }
-
-    #mensaje-qr {
-      margin-top: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máquina Vending</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: auto;
+        }
+        .product {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            cursor: pointer;
+        }
+        .product-number {
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+            font-size: 0.8em;
+            color: gray;
+        }
+        #formulario {
+            margin-top: 20px;
+        }
+        #qr-section {
+            display: none;
+            margin-top: 20px;
+        }
+        #qr-image {
+            max-width: 90%;
+            height: auto;
+        }
+        #qr-message {
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
 
-  <h2>Selecciona un producto</h2>
+    <h2>Selecciona un producto</h2>
+    <div class="grid-container" id="productos">
+        <div class="product" onclick="seleccionarProducto(1)">Coca Cola <div class="product-number">1</div></div>
+        <div class="product" onclick="seleccionarProducto(2)">Papas Fritas <div class="product-number">2</div></div>
+        <div class="product" onclick="seleccionarProducto(3)">Galletas <div class="product-number">3</div></div>
+        <div class="product" onclick="seleccionarProducto(4)">Chocolate <div class="product-number">4</div></div>
+        <div class="product" onclick="seleccionarProducto(5)">Agua Mineral <div class="product-number">5</div></div>
+        <div class="product" onclick="seleccionarProducto(6)">Jugo <div class="product-number">6</div></div>
+        <div class="product" onclick="seleccionarProducto(7)">Energética <div class="product-number">7</div></div>
+        <div class="product" onclick="seleccionarProducto(8)">Snacks <div class="product-number">8</div></div>
+        <div class="product" onclick="seleccionarProducto(9)">Gomitas <div class="product-number">9</div></div>
+        <div class="product" onclick="seleccionarProducto(10)">Café <div class="product-number">10</div></div>
+        <div class="product" onclick="seleccionarProducto(11)">Barra Cereal <div class="product-number">11</div></div>
+        <div class="product" onclick="seleccionarProducto(12)">Chicles <div class="product-number">12</div></div>
+        <div class="product" onclick="seleccionarProducto(13)">Te Helado <div class="product-number">13</div></div>
+        <div class="product" onclick="seleccionarProducto(14)">Brownie <div class="product-number">14</div></div>
+        <div class="product" onclick="seleccionarProducto(15)">Fruta Deshidratada <div class="product-number">15</div></div>
+    </div>
 
-  <div class="grid-container" id="productos"></div>
+    <div id="formulario" style="display:none;">
+        <h3>Ingresa tu número de WhatsApp</h3>
+        <input type="tel" id="telefono" placeholder="Ej: 961234567">
+        <button onclick="enviarDatos()">Enviar</button>
+    </div>
 
-  <div id="formulario">
-    <h3>Ingresa tu número de WhatsApp</h3>
-    <input type="tel" id="telefono" placeholder="Ej: 961234567" />
-    <br />
-    <button onclick="enviarDatos()">Enviar</button>
-  </div>
+    <div id="qr-section">
+        <img id="qr-image" src="" alt="QR Code">
+        <div id="qr-message">Escanea tu QR en la máquina para retirar tu producto</div>
+    </div>
 
-  <div id="qr-container">
-    <img id="qr-img" src="" alt="Código QR" />
-    <div id="mensaje-qr">Escanea tu QR en la máquina para retirar tu producto</div>
-  </div>
+    <script>
+        let productoSeleccionado = null;
 
-  <script>
-    const productos = [
-      "Coca-Cola", "Papas Fritas", "Galletas", "Agua", "Jugo",
-      "Chocolate", "Energética", "Chicle", "Gomitas", "Café",
-      "Té", "Cereal", "Leche", "Yogurt", "Barra"
-    ];
-
-    let productoSeleccionado = null;
-
-    const container = document.getElementById("productos");
-    productos.forEach((nombre, i) => {
-      const id = i + 1;
-      const div = document.createElement("div");
-      div.className = "product";
-      div.onclick = () => seleccionarProducto(id);
-      div.innerHTML = `
-        ${nombre}
-        <div class="product-number">${id}</div>
-      `;
-      container.appendChild(div);
-    });
-
-    function seleccionarProducto(id) {
-      productoSeleccionado = id;
-      document.getElementById('formulario').style.display = 'block';
-      document.getElementById('qr-container').style.display = 'none';
-    }
-
-    function enviarDatos() {
-      const telefonoInput = document.getElementById('telefono').value.trim();
-      if (!telefonoInput.match(/^\d{8,9}$/)) {
-        alert("Ingresa un número válido (Ej: 961234567)");
-        return;
-      }
-
-      const data = {
-        pedido_id: productoSeleccionado,
-        telefono: "+56" + telefonoInput,
-        expiracion: 600
-      };
-
-      fetch("https://flask-wsp.onrender.com/generar_qr", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.qr_base64) {
-          document.getElementById("qr-img").src = "data:image/png;base64," + res.qr_base64;
-          document.getElementById("qr-container").style.display = 'flex';
-        } else {
-          alert("No se pudo generar el QR.");
+        function seleccionarProducto(id) {
+            productoSeleccionado = id;
+            document.getElementById('formulario').style.display = 'block';
+            document.getElementById('qr-section').style.display = 'none';
         }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error al enviar los datos.");
-      });
-    }
-  </script>
-</body>
-</html>
+
+        function enviarDatos() {
+            const telefonoInput = document.getElementById('telefono').value.trim();
+            if (!telefonoInput || !productoSeleccionado) {
+                alert("Por favor, ingresa un número válido.");
+                return;
+            }
+
+            const telefonoConPrefijo = "+56" +
