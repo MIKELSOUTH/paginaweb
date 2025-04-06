@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máquina Vending</title>
+    <title>Selección de Producto</title>
     <style>
         body {
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 0;
-            padding: 10px;
+            padding: 20px;
         }
         .grid-container {
             display: grid;
@@ -19,70 +19,106 @@
             max-width: 400px;
             margin: auto;
         }
-        .product {
+        .icon {
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-            position: relative;
             cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
-        .product-number {
+        .icon span {
             position: absolute;
             bottom: 5px;
-            left: 10px;
-            font-size: 0.8em;
-            color: gray;
+            left: 5px;
+            font-size: 12px;
         }
-        #formulario {
-            margin-top: 20px;
-        }
-        #qr-section {
+        #qrContainer {
             display: none;
             margin-top: 20px;
+            text-align: center;
         }
-        #qr-image {
-            max-width: 90%;
-            height: auto;
-        }
-        #qr-message {
-            font-size: 1.2em;
+        #mensaje {
             margin-top: 10px;
-            font-weight: bold;
-            color: #333;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-
     <h2>Selecciona un producto</h2>
-    <div class="grid-container" id="productos">
-        <div class="product" onclick="seleccionarProducto(1)">Coca Cola <div class="product-number">1</div></div>
-        <div class="product" onclick="seleccionarProducto(2)">Papas Fritas <div class="product-number">2</div></div>
-        <div class="product" onclick="seleccionarProducto(3)">Galletas <div class="product-number">3</div></div>
-        <div class="product" onclick="seleccionarProducto(4)">Chocolate <div class="product-number">4</div></div>
-        <div class="product" onclick="seleccionarProducto(5)">Agua Mineral <div class="product-number">5</div></div>
-        <div class="product" onclick="seleccionarProducto(6)">Jugo <div class="product-number">6</div></div>
-        <div class="product" onclick="seleccionarProducto(7)">Energética <div class="product-number">7</div></div>
-        <div class="product" onclick="seleccionarProducto(8)">Snacks <div class="product-number">8</div></div>
-        <div class="product" onclick="seleccionarProducto(9)">Gomitas <div class="product-number">9</div></div>
-        <div class="product" onclick="seleccionarProducto(10)">Café <div class="product-number">10</div></div>
-        <div class="product" onclick="seleccionarProducto(11)">Barra Cereal <div class="product-number">11</div></div>
-        <div class="product" onclick="seleccionarProducto(12)">Chicles <div class="product-number">12</div></div>
-        <div class="product" onclick="seleccionarProducto(13)">Te Helado <div class="product-number">13</div></div>
-        <div class="product" onclick="seleccionarProducto(14)">Brownie <div class="product-number">14</div></div>
-        <div class="product" onclick="seleccionarProducto(15)">Fruta Deshidratada <div class="product-number">15</div></div>
+    <div class="grid-container">
+        <div class="icon" onclick="seleccionarProducto(1)">
+            Coca Cola
+            <span>1</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(2)">
+            Papas Fritas
+            <span>2</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(3)">
+            Galletas
+            <span>3</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(4)">
+            Chocolates
+            <span>4</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(5)">
+            Jugos
+            <span>5</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(6)">
+            Agua
+            <span>6</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(7)">
+            Snacks
+            <span>7</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(8)">
+            Café
+            <span>8</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(9)">
+            Té
+            <span>9</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(10)">
+            Energizantes
+            <span>10</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(11)">
+            Refrescos
+            <span>11</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(12)">
+            Leche
+            <span>12</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(13)">
+            Frutos Secos
+            <span>13</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(14)">
+            Galletas Saladas
+            <span>14</span>
+        </div>
+        <div class="icon" onclick="seleccionarProducto(15)">
+            Dulces
+            <span>15</span>
+        </div>
     </div>
 
-    <div id="formulario" style="display:none;">
+    <div id="formulario" style="display:none; margin-top: 20px;">
         <h3>Ingresa tu número de WhatsApp</h3>
-        <input type="tel" id="telefono" placeholder="Ej: 961234567">
+        <input type="tel" id="telefono" placeholder="Ej: 961767987">
         <button onclick="enviarDatos()">Enviar</button>
     </div>
 
-    <div id="qr-section">
-        <img id="qr-image" src="" alt="QR Code">
-        <div id="qr-message">Escanea tu QR en la máquina para retirar tu producto</div>
+    <div id="qrContainer">
+        <h3>Escanea tu QR en el lector de la máquina para retirar tu producto</h3>
+        <img id="qrImage" src="" alt="QR Code" style="width: 100%; max-width: 300px;">
+        <p id="mensaje"></p>
     </div>
 
     <script>
@@ -91,22 +127,19 @@
         function seleccionarProducto(id) {
             productoSeleccionado = id;
             document.getElementById('formulario').style.display = 'block';
-            document.getElementById('qr-section').style.display = 'none';
         }
 
         function enviarDatos() {
-            const telefonoInput = document.getElementById('telefono').value.trim();
-            if (!telefonoInput || !productoSeleccionado) {
-                alert("Por favor, ingresa un número válido.");
+            const telefono = document.getElementById('telefono').value;
+            if (!telefono || !productoSeleccionado) {
+                alert("Por favor, ingresa un número de teléfono válido.");
                 return;
             }
 
-            const telefonoConPrefijo = "+56" + telefonoInput;
-
             const data = {
                 pedido_id: productoSeleccionado,
-                telefono: telefonoConPrefijo,
-                expiracion: 600
+                telefono: "+56" + telefono,  // Añadir el código de país (+56)
+                expiracion: 600  // 10 minutos de expiración
             };
 
             fetch('https://flask-wsp.onrender.com/generar_qr', {
@@ -118,17 +151,15 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.qr_base64) {
-                    const qrImage = document.getElementById('qr-image');
-                    qrImage.src = "data:image/png;base64," + data.qr_base64;
-                    document.getElementById('qr-section').style.display = 'block';
-                } else {
-                    alert("No se recibió código QR.");
-                }
+                const qrImage = document.getElementById('qrImage');
+                const qrData = data.qr_base64;
+                qrImage.src = `data:image/png;base64,${qrData}`;  // Mostrar el QR como imagen
+                document.getElementById('qrContainer').style.display = 'block';  // Mostrar el QR
+                document.getElementById('formulario').style.display = 'none';  // Ocultar formulario
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("Error al enviar la solicitud.");
+                alert("Hubo un problema al generar el código QR.");
             });
         }
     </script>
