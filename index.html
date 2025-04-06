@@ -45,4 +45,58 @@
         <div class="icon" onclick="seleccionarProducto(7)">🎧</div>
         <div class="icon" onclick="seleccionarProducto(8)">⌚</div>
         <div class="icon" onclick="seleccionarProducto(9)">💡</div>
-        <div class="icon" onclick="seleccionarProducto(10)">🎮
+        <div class="icon" onclick="seleccionarProducto(10)">🎮</div>
+        <div class="icon" onclick="seleccionarProducto(11)">🖥️</div>
+        <div class="icon" onclick="seleccionarProducto(12)">📷</div>
+        <div class="icon" onclick="seleccionarProducto(13)">🎤</div>
+        <div class="icon" onclick="seleccionarProducto(14)">📚</div>
+        <div class="icon" onclick="seleccionarProducto(15)">🔋</div>
+    </div>
+
+    <div id="formulario" style="display:none; margin-top: 20px;">
+        <h3>Ingresa tu número de WhatsApp</h3>
+        <input type="tel" id="telefono" placeholder="Ej: +1234567890">
+        <button onclick="enviarDatos()">Enviar</button>
+    </div>
+
+    <script>
+        let productoSeleccionado = null;
+
+        function seleccionarProducto(id) {
+            productoSeleccionado = id;
+            document.getElementById('formulario').style.display = 'block';
+        }
+
+        function enviarDatos() {
+            const telefono = document.getElementById('telefono').value;
+            if (!telefono || !productoSeleccionado) {
+                alert("Por favor, ingresa un número de teléfono válido.");
+                return;
+            }
+
+            const data = {
+                pedido_id: productoSeleccionado,
+                telefono: telefono,
+                expiracion: 600
+            };
+
+            fetch('https://flask-wsp.onrender.com/generar_qr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("El código QR será enviado a tu WhatsApp.");
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Hubo un problema al enviar el mensaje.");
+            });
+        }
+    </script>
+</body>
+</html>
+
