@@ -1,125 +1,165 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Producto</title>
-    <style>
-        body {
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            max-width: 300px;
-            margin: auto;
-        }
-        .icon {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #qr-image {
-            margin-top: 20px;
-            max-width: 200px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vending</title>
+  <style>
+    body {
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .product {
+      position: relative;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .product img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+    }
+
+    .product-number {
+      position: absolute;
+      bottom: 5px;
+      left: 10px;
+      font-size: 12px;
+      color: #333;
+    }
+
+    #formulario, #qr-container {
+      margin-top: 30px;
+      display: none;
+    }
+
+    input[type="tel"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #qr-container img {
+      margin-top: 20px;
+      width: 200px;
+    }
+  </style>
 </head>
 <body>
-    <h2>Selecciona un producto</h2>
-    <div class="grid-container">
-        <!-- Productos en una matriz de 5x3 -->
-        <div class="icon" onclick="seleccionarProducto(1)">📦 Producto 1</div>
-        <div class="icon" onclick="seleccionarProducto(2)">🍫 Producto 2</div>
-        <div class="icon" onclick="seleccionarProducto(3)">🥤 Producto 3</div>
-        <div class="icon" onclick="seleccionarProducto(4)">🍪 Producto 4</div>
-        <div class="icon" onclick="seleccionarProducto(5)">🧴 Producto 5</div>
-        <div class="icon" onclick="seleccionarProducto(6)">📱 Producto 6</div>
-        <div class="icon" onclick="seleccionarProducto(7)">🎧 Producto 7</div>
-        <div class="icon" onclick="seleccionarProducto(8)">⌚ Producto 8</div>
-        <div class="icon" onclick="seleccionarProducto(9)">💡 Producto 9</div>
-        <div class="icon" onclick="seleccionarProducto(10)">🎮 Producto 10</div>
-        <div class="icon" onclick="seleccionarProducto(11)">🖥️ Producto 11</div>
-        <div class="icon" onclick="seleccionarProducto(12)">📷 Producto 12</div>
-        <div class="icon" onclick="seleccionarProducto(13)">🎤 Producto 13</div>
-        <div class="icon" onclick="seleccionarProducto(14)">📚 Producto 14</div>
-        <div class="icon" onclick="seleccionarProducto(15)">🔋 Producto 15</div>
-    </div>
 
-    <div id="formulario" style="display:none; margin-top: 20px;">
-        <h3>Ingresa tu número de WhatsApp</h3>
-        <input type="tel" id="telefono" placeholder="Ej: 961767987">
-        <button class="button" onclick="enviarDatos()">Enviar</button>
-    </div>
+  <h2>Selecciona un producto</h2>
 
-    <div id="qr-container" style="display:none; margin-top: 20px;">
-        <h3>Tu código QR</h3>
-        <img id="qr-image" alt="QR" />
-    </div>
+  <div class="grid-container" id="productos">
+    <!-- Se rellenará con JS -->
+  </div>
 
-    <script>
-        let productoSeleccionado = null;
+  <div id="formulario">
+    <h3>Ingresa tu número de WhatsApp</h3>
+    <input type="tel" id="telefono" placeholder="Ej: 961234567" />
+    <br />
+    <button onclick="enviarDatos()">Enviar</button>
+  </div>
 
-        function seleccionarProducto(id) {
-            productoSeleccionado = id;
-            document.getElementById('formulario').style.display = 'block';
+  <div id="qr-container">
+    <h3>Tu código QR</h3>
+    <img id="qr-img" src="" alt="Código QR" />
+  </div>
+
+  <script>
+    const productos = [
+      { id: 1, nombre: "Coca-Cola", img: "https://i.imgur.com/Cocacola.png" },
+      { id: 2, nombre: "Papas Fritas", img: "https://i.imgur.com/n4vH7Zr.png" },
+      { id: 3, nombre: "Galletas", img: "https://i.imgur.com/NtIXe3E.png" },
+      { id: 4, nombre: "Agua", img: "https://i.imgur.com/7O0vlpM.png" },
+      { id: 5, nombre: "Jugo", img: "https://i.imgur.com/bHkIpO3.png" },
+      { id: 6, nombre: "Chocolate", img: "https://i.imgur.com/W5xM1BE.png" },
+      { id: 7, nombre: "Energética", img: "https://i.imgur.com/3DYWdYv.png" },
+      { id: 8, nombre: "Chicle", img: "https://i.imgur.com/Y5D6bX1.png" },
+      { id: 9, nombre: "Gomitas", img: "https://i.imgur.com/I0PZhxZ.png" },
+      { id: 10, nombre: "Café", img: "https://i.imgur.com/vTx7eoW.png" },
+      { id: 11, nombre: "Té", img: "https://i.imgur.com/WfxzBPG.png" },
+      { id: 12, nombre: "Cereal", img: "https://i.imgur.com/hI1v1b1.png" },
+      { id: 13, nombre: "Leche", img: "https://i.imgur.com/DqKiAGc.png" },
+      { id: 14, nombre: "Yogurt", img: "https://i.imgur.com/f5bbDNU.png" },
+      { id: 15, nombre: "Barra", img: "https://i.imgur.com/Zv5rBGY.png" }
+    ];
+
+    let productoSeleccionado = null;
+
+    // Mostrar productos
+    const container = document.getElementById("productos");
+    productos.forEach(prod => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.onclick = () => seleccionarProducto(prod.id);
+      div.innerHTML = `
+        <img src="${prod.img}" alt="${prod.nombre}" />
+        <div class="product-number">#${prod.id}</div>
+      `;
+      container.appendChild(div);
+    });
+
+    function seleccionarProducto(id) {
+      productoSeleccionado = id;
+      document.getElementById('formulario').style.display = 'block';
+      document.getElementById('qr-container').style.display = 'none';
+    }
+
+    function enviarDatos() {
+      const telefonoInput = document.getElementById('telefono').value.trim();
+      if (!telefonoInput.match(/^\d{8,9}$/)) {
+        alert("Ingresa un número válido (Ej: 961234567)");
+        return;
+      }
+
+      const data = {
+        pedido_id: productoSeleccionado,
+        telefono: "+56" + telefonoInput,
+        expiracion: 600
+      };
+
+      fetch("https://flask-wsp.onrender.com/generar_qr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.qr_base64) {
+          document.getElementById("qr-img").src = "data:image/png;base64," + res.qr_base64;
+          document.getElementById("qr-container").style.display = 'block';
+        } else {
+          alert("No se pudo generar el QR.");
         }
-
-        function enviarDatos() {
-            const telefono = document.getElementById('telefono').value;
-            if (!telefono || !productoSeleccionado) {
-                alert("Por favor, ingresa un número de teléfono válido.");
-                return;
-            }
-
-            // Prepend the Chilean country code (+56) to the phone number
-            const numeroConPais = '+56' + telefono;
-
-            const data = {
-                pedido_id: productoSeleccionado,
-                telefono: numeroConPais,
-                expiracion: 600  // 10 minutos de expiración
-            };
-
-            fetch('https://flask-wsp.onrender.com/generar_qr', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.blob())
-            .then(imageBlob => {
-                const imageUrl = URL.createObjectURL(imageBlob);
-                document.getElementById('qr-image').src = imageUrl;
-                document.getElementById('qr-container').style.display = 'block';
-                // Optional: Open WhatsApp link for sending QR to self
-                const whatsappUrl = `https://wa.me/${numeroConPais}?text=Tu código QR está listo!`;
-                window.location.href = whatsappUrl;
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Hubo un problema al generar el código QR.");
-            });
-        }
-    </script>
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error al enviar los datos.");
+      });
+    }
+  </script>
 </body>
 </html>
-
-
