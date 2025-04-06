@@ -101,4 +101,36 @@
                 return;
             }
 
-            const telefonoConPrefijo = "+56" +
+            const telefonoConPrefijo = "+56" + telefonoInput;
+
+            const data = {
+                pedido_id: productoSeleccionado,
+                telefono: telefonoConPrefijo,
+                expiracion: 600
+            };
+
+            fetch('https://flask-wsp.onrender.com/generar_qr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.qr_base64) {
+                    const qrImage = document.getElementById('qr-image');
+                    qrImage.src = "data:image/png;base64," + data.qr_base64;
+                    document.getElementById('qr-section').style.display = 'block';
+                } else {
+                    alert("No se recibió código QR.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error al enviar la solicitud.");
+            });
+        }
+    </script>
+</body>
+</html>
